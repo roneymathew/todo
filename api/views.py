@@ -316,6 +316,26 @@ def ShareToDo(request):
     else:
         return Response("permission denied",status = status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def MarkAsComplete(request):
+    if request.method == 'POST':
+        if request.user.user_type == 'US':
+            if request.data.get("task_id",None):
+                if ToDoDetails.objects.filter(id = request.data["task_id"] , createdby = request.user).exists():
+                    to_do_obj = ToDoDetails.objects.filter(id = request.data["task_id"] , createdby = request.user)[0]
+                    to_do_obj.status = 3
+                    to_do_obj.save()      
+                    return Response("Task completed",status = status.HTTP_200_OK)
+                else:
+                    return Response('Invalid Task id',status = status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response('Must provide task id',status = status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response('Permission denied',status = status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response('Methord not accepted',status = status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def sharedToDoList(request):

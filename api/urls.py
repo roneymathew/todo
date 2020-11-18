@@ -31,4 +31,5 @@ urlpatterns = [
     url('deletecatagory/',views.Deletecatagory),
     url('catagoryList',views.catagoryList),
     url('sharedtodolist',views.sharedToDoList),
+    url('markascomplete',views.MarkAsComplete),
     ]
